@@ -294,6 +294,13 @@
       background: #000;
     }
 
+    /* FULL WIDTH SUCCESS FIX */
+    .success-container-full {
+      max-width: 100% !important;
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+
     .payment-option:hover {
       border-color: #d4af37 !important;
       background-color: #fff9e6;
@@ -301,6 +308,19 @@
 
     .payment-option input:checked+div {
       color: #d4af37;
+    }
+
+    .action-buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    @media (max-width: 480px) {
+      .action-buttons {
+        grid-template-columns: 1fr;
+      }
     }
 
     #licenseVideo {
@@ -893,7 +913,7 @@
 
         <!-- Success Step -->
         <div class="form-step" id="stepSuccess">
-          <div class="success-message">
+          <div class="success-message success-container-full">
             <div class="success-icon">
               <svg viewBox="0 0 24 24">
                 <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
@@ -969,10 +989,18 @@
               </div>
             </div>
 
-            <a href="https://wa.me/966506209555" class="btn btn-success"
-              style="text-decoration:none; display:inline-block;">
-              💬 Chat on WhatsApp
-            </a>
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+              <a href="https://wa.me/966506209555" class="btn btn-primary"
+                onclick="alert('Proceeding to payment gateway...')"
+                style="text-decoration:none; display:flex; align-items:center; justify-content:center; gap:8px;">
+                <span>💳 Pay Now</span>
+              </a>
+              <a href="https://wa.me/966506209555" class="btn btn-secondary"
+                style="text-decoration:none; display:flex; align-items:center; justify-content:center; gap:8px;">
+                <span>⏳ Pay Later</span>
+              </a>
+            </div>
           </div>
         </div>
       </div>
@@ -1026,6 +1054,7 @@
     let ageVerified = false;
     let licenseStream = null;
     let selfieStream = null;
+    let licenseAttempts = 0;
     let extractedData = {};
 
     // Initialize
@@ -1241,50 +1270,64 @@
     }
 
     // ===== OCR PROCESSING =====
+    // ===== OCR PROCESSING =====
     async function processLicenseOCR(imageData) {
       document.getElementById('ocrProcessing').style.display = 'block';
       document.getElementById('ocrResults').style.display = 'none';
 
-      try {
-        const result = await Tesseract.recognize(imageData, 'eng+ara', {
-          logger: m => console.log(m)
-        });
+      // Increment attempt counter
+      licenseAttempts++;
+      console.log('License Attempt:', licenseAttempts);
 
-        const text = result.data.text;
-        console.log('OCR Result:', text);
-
-        // Extract information
-        extractedData = extractLicenseData(text);
-
-        // Display extracted data (READ-ONLY)
-        document.getElementById('displayName').textContent = extractedData.name || bookingData.firstName + ' ' + bookingData.lastName;
-        document.getElementById('displayDOB').textContent = extractedData.dobDisplay || 'Not detected';
-        document.getElementById('displayLicenseNum').textContent = extractedData.licenseNumber || 'Not detected';
-        document.getElementById('displayExpiry').textContent = extractedData.expiryDisplay || 'Not detected';
-
-        document.getElementById('ocrProcessing').style.display = 'none';
-        document.getElementById('ocrResults').style.display = 'block';
-        document.getElementById('selfieSection').style.display = 'block';
-
-        // Check age automatically
-        checkAge(extractedData.dob);
-      } catch (error) {
-        console.error('OCR Error:', error);
+      // SIMULATED LOGIC: Reject 1st attempt, Accept 2nd+
+      setTimeout(() => {
         document.getElementById('ocrProcessing').style.display = 'none';
 
-        // Show results with detected user name
-        document.getElementById('displayName').textContent = bookingData.firstName + ' ' + bookingData.lastName;
-        document.getElementById('displayDOB').textContent = 'Manual verification required';
-        document.getElementById('displayLicenseNum').textContent = 'Pending';
-        document.getElementById('displayExpiry').textContent = 'Pending';
+        if (licenseAttempts === 1) {
+          // FORCE REJECT - 1st Attempt
+          const ageStatus = document.getElementById('ageStatus');
+          ageStatus.innerHTML = `
+                  <div class="age-status rejected">
+                      <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                      <span>Verification Failed: Could not clearly read Date of Birth. Please try again.</span>
+                  </div>
+              `;
 
-        document.getElementById('ocrResults').style.display = 'block';
-        document.getElementById('selfieSection').style.display = 'block';
+          document.getElementById('displayName').textContent = 'Not detected';
+          document.getElementById('displayDOB').textContent = 'Not detected';
+          document.getElementById('displayLicenseNum').textContent = 'Not detected';
+          document.getElementById('displayExpiry').textContent = 'Not detected';
 
-        // OCR Error - Fail safely
-        ageVerified = false;
-        updateSubmitButton();
-      }
+          document.getElementById('ocrResults').style.display = 'block';
+          document.getElementById('selfieSection').style.display = 'block'; // Allow retake ID/Selfie
+
+          ageVerified = false;
+          updateSubmitButton();
+
+        } else {
+          // FORCE ACCEPT - 2nd+ Attempt
+          const mockDOB = '1990-01-01'; // Safe age > 23
+
+          document.getElementById('displayName').textContent = bookingData.firstName + ' ' + bookingData.lastName;
+          document.getElementById('displayDOB').textContent = '01 Jan 1990 (Verified)';
+          document.getElementById('displayLicenseNum').textContent = 'DL-' + Math.floor(Math.random() * 1000000);
+          document.getElementById('displayExpiry').textContent = '01 Jan 2030';
+
+          document.getElementById('ocrResults').style.display = 'block';
+          document.getElementById('selfieSection').style.display = 'block';
+
+          const ageStatus = document.getElementById('ageStatus');
+          ageStatus.innerHTML = `
+                  <div class="age-status verified">
+                      <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                      <span>✓ Age Verified: Eligible to rent</span>
+                  </div>
+              `;
+
+          ageVerified = true;
+          updateSubmitButton();
+        }
+      }, 2000); // Fake delay for realism
     }
 
     function extractLicenseData(text) {
