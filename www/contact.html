@@ -1,0 +1,1372 @@
+﻿<!DOCTYPE html>
+<html data-wf-domain="morerentcar.com" lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Book Your Car - More Rent A Car</title>
+  <meta content="Book Your Car - More Rent A Car" property="og:title" />
+  <meta content="width=device-width, initial-scale=1" name="viewport" />
+  <link href="styles.css" rel="stylesheet" type="text/css" />
+  <link href="https://fonts.googleapis.com" rel="preconnect" />
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin="anonymous" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Tesseract.js for OCR -->
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    .booking-hero {
+      background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+      padding: 140px 20px 60px;
+      text-align: center;
+    }
+
+    .booking-hero h1 {
+      color: #fff;
+      font-size: 42px;
+      font-weight: 700;
+      margin-bottom: 15px;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .booking-hero p {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 18px;
+    }
+
+    .booking-section {
+      background: #f8f8f8;
+      padding: 60px 20px;
+      min-height: 100vh;
+    }
+
+    .booking-container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    /* Progress Steps */
+    .progress-steps {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 40px;
+      gap: 0;
+    }
+
+    .step {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 15px 25px;
+      background: #fff;
+      border: 2px solid #e0e0e0;
+      color: #999;
+      font-weight: 500;
+      transition: all 0.3s;
+    }
+
+    .step:first-child {
+      border-radius: 30px 0 0 30px;
+    }
+
+    .step:last-child {
+      border-radius: 0 30px 30px 0;
+    }
+
+    .step.active {
+      background: linear-gradient(135deg, #d4af37, #b8860b);
+      border-color: #d4af37;
+      color: #000;
+    }
+
+    .step.completed {
+      background: #28a745;
+      border-color: #28a745;
+      color: #fff;
+    }
+
+    .step-number {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: currentColor;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .step.active .step-number {
+      background: #000;
+      color: #d4af37;
+    }
+
+    .step.completed .step-number {
+      background: #fff;
+      color: #28a745;
+    }
+
+    /* Form Card */
+    .form-card {
+      background: #fff;
+      border-radius: 24px;
+      padding: 40px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+    }
+
+    .form-step {
+      display: none;
+    }
+
+    .form-step.active {
+      display: block;
+    }
+
+    .form-title {
+      font-size: 24px;
+      font-weight: 600;
+      color: #1a1a1a;
+      margin-bottom: 30px;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    @media (max-width: 600px) {
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+
+      .progress-steps {
+        flex-wrap: wrap;
+      }
+
+      .step {
+        font-size: 12px;
+        padding: 10px 15px;
+      }
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      color: #333;
+      margin-bottom: 8px;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 14px 18px;
+      border: 2px solid #e0e0e0;
+      border-radius: 12px;
+      font-size: 16px;
+      font-family: 'Poppins', sans-serif;
+      transition: border-color 0.3s;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: #d4af37;
+    }
+
+    /* Car Selection Card */
+    .car-select-card {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 20px;
+      background: #f8f8f8;
+      border-radius: 16px;
+      margin-bottom: 20px;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .car-select-card:hover,
+    .car-select-card.selected {
+      border-color: #d4af37;
+      background: rgba(212, 175, 55, 0.05);
+    }
+
+    .car-select-card img {
+      width: 120px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+
+    .car-select-info h4 {
+      font-size: 18px;
+      font-weight: 600;
+      color: #1a1a1a;
+      margin: 0 0 5px;
+    }
+
+    .car-select-info .price {
+      font-size: 20px;
+      font-weight: 700;
+      color: #d4af37;
+    }
+
+    /* Price Calculator */
+    .price-calculator {
+      background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(212, 175, 55, 0.05));
+      border: 2px solid rgba(212, 175, 55, 0.3);
+      border-radius: 16px;
+      padding: 25px;
+      margin-top: 30px;
+    }
+
+    .price-calculator h3 {
+      font-size: 18px;
+      font-weight: 600;
+      color: #1a1a1a;
+      margin-bottom: 15px;
+    }
+
+    .price-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .price-row:last-child {
+      border-bottom: none;
+    }
+
+    .price-row.total {
+      font-size: 22px;
+      font-weight: 700;
+      color: #d4af37;
+      padding-top: 15px;
+      margin-top: 10px;
+      border-top: 2px solid #d4af37;
+    }
+
+    /* Camera Capture Section */
+    .camera-section {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .camera-container {
+      position: relative;
+      max-width: 500px;
+      margin: 0 auto;
+      border-radius: 16px;
+      overflow: hidden;
+      background: #000;
+    }
+
+    #licenseVideo {
+      width: 100%;
+      max-height: 350px;
+      object-fit: cover;
+    }
+
+    #licenseCanvas {
+      display: none;
+    }
+
+    #licenseCaptured {
+      width: 100%;
+      max-height: 350px;
+      object-fit: contain;
+      border-radius: 16px;
+      border: 3px solid #28a745;
+    }
+
+    .camera-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border: 3px dashed rgba(212, 175, 55, 0.8);
+      border-radius: 16px;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .camera-overlay-text {
+      background: rgba(0, 0, 0, 0.7);
+      color: #d4af37;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    .camera-controls {
+      margin-top: 20px;
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    /* OCR Results - READ ONLY */
+    .ocr-results {
+      background: #f8f8f8;
+      border-radius: 16px;
+      padding: 25px;
+      margin-top: 25px;
+    }
+
+    .ocr-results h4 {
+      font-size: 16px;
+      font-weight: 600;
+      color: #1a1a1a;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .ocr-field {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    .ocr-field:last-child {
+      border-bottom: none;
+    }
+
+    .ocr-field label {
+      font-weight: 500;
+      color: #666;
+    }
+
+    .ocr-value {
+      font-weight: 600;
+      color: #1a1a1a;
+      font-size: 15px;
+      background: #e9e9e9;
+      padding: 8px 15px;
+      border-radius: 8px;
+      min-width: 180px;
+      text-align: right;
+    }
+
+    /* Age Verification Status */
+    .age-status {
+      padding: 15px 20px;
+      border-radius: 12px;
+      margin-top: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 600;
+    }
+
+    .age-status.verified {
+      background: rgba(40, 167, 69, 0.1);
+      color: #28a745;
+      border: 2px solid #28a745;
+    }
+
+    .age-status.rejected {
+      background: rgba(220, 53, 69, 0.1);
+      color: #dc3545;
+      border: 2px solid #dc3545;
+    }
+
+    .age-status svg {
+      width: 24px;
+      height: 24px;
+      fill: currentColor;
+    }
+
+    /* Processing Loader */
+    .processing {
+      text-align: center;
+      padding: 40px;
+    }
+
+    .processing .spinner {
+      width: 50px;
+      height: 50px;
+      border: 4px solid #e0e0e0;
+      border-top-color: #d4af37;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 20px;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* Selfie Section */
+    .selfie-section {
+      text-align: center;
+      margin-top: 30px;
+      padding-top: 30px;
+      border-top: 2px solid #e0e0e0;
+    }
+
+    #selfieVideo {
+      width: 100%;
+      max-width: 300px;
+      border-radius: 50%;
+      border: 4px solid #d4af37;
+      aspect-ratio: 1;
+      object-fit: cover;
+    }
+
+    #selfieCaptured {
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      border: 4px solid #28a745;
+      object-fit: cover;
+    }
+
+    /* Buttons */
+    .btn {
+      padding: 16px 40px;
+      border: none;
+      border-radius: 30px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #d4af37, #b8860b);
+      color: #000;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4);
+    }
+
+    .btn-secondary {
+      background: #f0f0f0;
+      color: #333;
+    }
+
+    .btn-secondary:hover {
+      background: #e0e0e0;
+    }
+
+    .btn-success {
+      background: #28a745;
+      color: #fff;
+    }
+
+    .btn-danger {
+      background: #dc3545;
+      color: #fff;
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 15px;
+      justify-content: flex-end;
+      margin-top: 30px;
+    }
+
+    /* Success State */
+    .success-message {
+      text-align: center;
+      padding: 40px;
+    }
+
+    .success-icon {
+      width: 80px;
+      height: 80px;
+      background: #28a745;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 25px;
+    }
+
+    .success-icon svg {
+      width: 40px;
+      height: 40px;
+      fill: #fff;
+    }
+
+    .success-message h2 {
+      font-size: 28px;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin-bottom: 15px;
+    }
+
+    .success-message p {
+      color: #666;
+      font-size: 16px;
+      margin-bottom: 30px;
+    }
+
+    .booking-summary {
+      background: #f8f8f8;
+      border-radius: 16px;
+      padding: 25px;
+      text-align: left;
+      margin-bottom: 30px;
+    }
+
+    .booking-summary h4 {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 15px;
+    }
+
+    .booking-detail {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    .booking-detail:last-child {
+      border-bottom: none;
+    }
+
+    .camera-permission-note {
+      background: rgba(212, 175, 55, 0.1);
+      border: 1px solid #d4af37;
+      border-radius: 12px;
+      padding: 15px;
+      margin-bottom: 20px;
+      font-size: 14px;
+      color: #666;
+    }
+
+    .verification-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .verification-badge.success {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .verification-badge.pending {
+      background: #fff3cd;
+      color: #856404;
+    }
+  </style>
+</head>
+
+<body class="body">
+  <!-- Navbar -->
+  <div data-animation="default" class="navbar w-nav" data-easing2="ease" data-easing="ease" data-collapse="medium"
+    role="banner" data-no-scroll="1" data-duration="400" data-doc-height="1">
+    <div class="navbar-wrapper">
+      <a href="index.html" class="navbar-logo w-nav-brand"><img src="images/more-logo.png" loading="lazy"
+          alt="More Rent A Car" class="image" /></a>
+      <nav role="navigation" class="nav-menu-wrapper w-nav-menu">
+        <ul role="list" class="nav-menu-two w-list-unstyled">
+          <li><a href="index.html" class="navbar-link">Home</a></li>
+          <li><a href="cars.html" class="navbar-link">Cars</a></li>
+          <li><a href="feautures.html" class="navbar-link">Features</a></li>
+          <li><a href="about-us.html" class="navbar-link">About Us</a></li>
+          <li class="navbar-button-wrapper"><a href="contact.html" aria-current="page"
+              class="button basic-button navbar-button w-button w--current">Book Now</a></li>
+        </ul>
+      </nav>
+      <div class="menu-button w-nav-button">
+        <div class="w-icon-nav-menu"></div>
+      </div>
+    </div>
+  </div>
+
+  <section class="booking-hero">
+    <h1>Book Your Dream Car</h1>
+    <p>Complete verification in just 3 simple steps</p>
+  </section>
+
+  <section class="booking-section">
+    <div class="booking-container">
+      <!-- Progress Steps -->
+      <div class="progress-steps">
+        <div class="step active" data-step="1">
+          <span class="step-number">1</span>
+          <span>Personal Info</span>
+        </div>
+        <div class="step" data-step="2">
+          <span class="step-number">2</span>
+          <span>Car & Dates</span>
+        </div>
+        <div class="step" data-step="3">
+          <span class="step-number">3</span>
+          <span>Verification</span>
+        </div>
+      </div>
+
+      <div class="form-card">
+        <!-- Step 1: Personal Info -->
+        <div class="form-step active" id="step1">
+          <h2 class="form-title">Personal Information</h2>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="firstName">First Name *</label>
+              <input type="text" id="firstName" placeholder="Enter your first name" required>
+            </div>
+            <div class="form-group">
+              <label for="lastName">Last Name *</label>
+              <input type="text" id="lastName" placeholder="Enter your last name" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="email">Email Address *</label>
+              <input type="email" id="email" placeholder="your@email.com" required>
+            </div>
+            <div class="form-group">
+              <label for="phone">Phone Number *</label>
+              <input type="tel" id="phone" placeholder="+966 5XX XXX XXXX" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="nationality">Nationality *</label>
+            <select id="nationality" required>
+              <option value="">Select your nationality</option>
+              <option value="SA">Saudi Arabia</option>
+              <option value="AE">United Arab Emirates</option>
+              <option value="KW">Kuwait</option>
+              <option value="QA">Qatar</option>
+              <option value="BH">Bahrain</option>
+              <option value="OM">Oman</option>
+              <option value="EG">Egypt</option>
+              <option value="JO">Jordan</option>
+              <option value="LB">Lebanon</option>
+              <option value="US">United States</option>
+              <option value="GB">United Kingdom</option>
+              <option value="OTHER">Other</option>
+            </select>
+          </div>
+
+          <div class="btn-group">
+            <button class="btn btn-primary" onclick="nextStep(1)">Continue to Car Selection →</button>
+          </div>
+        </div>
+
+        <!-- Step 2: Car & Dates -->
+        <div class="form-step" id="step2">
+          <h2 class="form-title">Select Your Car & Dates</h2>
+
+          <div class="form-group">
+            <label for="carSelect">Choose Your Car *</label>
+            <select id="carSelect" onchange="updatePriceCalculator()">
+              <option value="">Select a car</option>
+            </select>
+          </div>
+
+          <div id="selectedCarPreview" style="display:none;"></div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="pickupDate">Pickup Date *</label>
+              <input type="date" id="pickupDate" onchange="updatePriceCalculator()" required>
+            </div>
+            <div class="form-group">
+              <label for="returnDate">Return Date *</label>
+              <input type="date" id="returnDate" onchange="updatePriceCalculator()" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="pickupLocation">Pickup Location</label>
+            <select id="pickupLocation" onchange="updatePriceCalculator()">
+              <option value="office">Our Office - Salamah, Jeddah</option>
+              <option value="airport">King Abdulaziz International Airport (+100 SAR)</option>
+              <option value="hotel">Hotel Delivery (+150 SAR)</option>
+            </select>
+          </div>
+
+          <div class="price-calculator" id="priceCalculator" style="display:none;">
+            <h3>💰 Price Breakdown</h3>
+            <div class="price-row">
+              <span>Daily Rate</span>
+              <span id="dailyRateDisplay">0 SAR</span>
+            </div>
+            <div class="price-row">
+              <span>Number of Days</span>
+              <span id="daysDisplay">0 days</span>
+            </div>
+            <div class="price-row">
+              <span>Subtotal</span>
+              <span id="subtotalDisplay">0 SAR</span>
+            </div>
+            <div class="price-row">
+              <span>Delivery Fee</span>
+              <span id="deliveryFeeDisplay">0 SAR</span>
+            </div>
+            <div class="price-row">
+              <span>Insurance (Included)</span>
+              <span style="color:#28a745;">✓ Free</span>
+            </div>
+            <div class="price-row total">
+              <span>Total</span>
+              <span id="totalDisplay">0 SAR</span>
+            </div>
+          </div>
+
+          <div class="btn-group">
+            <button class="btn btn-secondary" onclick="prevStep(2)">← Back</button>
+            <button class="btn btn-primary" onclick="nextStep(2)">Continue to Verification →</button>
+          </div>
+        </div>
+
+        <!-- Step 3: Verification (Camera Only - No Editing) -->
+        <div class="form-step" id="step3">
+          <h2 class="form-title">Identity Verification</h2>
+
+          <div class="camera-permission-note">
+            <strong>🔒 Secure AI Verification:</strong> Take a photo of your driving license using your camera. Our AI
+            will automatically extract and verify your information. Data cannot be manually edited for security.
+          </div>
+
+          <!-- License Camera Capture -->
+          <div class="camera-section" id="licenseCameraSection">
+            <h3 style="margin-bottom:15px;">📄 Capture Driving License (Front)</h3>
+            <p style="color:#666; margin-bottom:20px;">Position your license within the frame and take a clear photo</p>
+
+            <div class="camera-container" id="licenseContainer">
+              <video id="licenseVideo" autoplay playsinline></video>
+              <canvas id="licenseCanvas"></canvas>
+              <div class="camera-overlay" id="licenseOverlay">
+                <span class="camera-overlay-text">Position license here</span>
+              </div>
+            </div>
+
+            <img id="licenseCaptured" style="display:none;">
+
+            <div class="camera-controls">
+              <button class="btn btn-primary" id="startLicenseCameraBtn" onclick="startLicenseCamera()">📷 Start
+                Camera</button>
+              <button class="btn btn-success" id="captureLicenseBtn" onclick="captureLicense()" style="display:none;">📸
+                Capture License</button>
+              <button class="btn btn-danger" id="retakeLicenseBtn" onclick="retakeLicense()" style="display:none;">🔄
+                Retake</button>
+            </div>
+          </div>
+
+          <!-- OCR Processing -->
+          <div id="ocrProcessing" class="processing" style="display:none;">
+            <div class="spinner"></div>
+            <p>🔍 AI is scanning your license...</p>
+            <p style="font-size:12px; color:#999;">This may take a few seconds</p>
+          </div>
+
+          <!-- OCR Results - READ ONLY (No inputs, just display) -->
+          <div class="ocr-results" id="ocrResults" style="display:none;">
+            <h4>
+              📋 Verified Information
+              <span class="verification-badge success">✓ AI Verified</span>
+            </h4>
+            <div class="ocr-field">
+              <label>Full Name</label>
+              <span class="ocr-value" id="displayName">-</span>
+            </div>
+            <div class="ocr-field">
+              <label>Date of Birth</label>
+              <span class="ocr-value" id="displayDOB">-</span>
+            </div>
+            <div class="ocr-field">
+              <label>License Number</label>
+              <span class="ocr-value" id="displayLicenseNum">-</span>
+            </div>
+            <div class="ocr-field">
+              <label>Expiry Date</label>
+              <span class="ocr-value" id="displayExpiry">-</span>
+            </div>
+            <div id="ageStatus"></div>
+          </div>
+
+          <!-- Selfie Verification -->
+          <div class="selfie-section" id="selfieSection" style="display:none;">
+            <h3 style="margin-bottom:15px;">📸 Take a Selfie</h3>
+            <p style="color:#666; margin-bottom:20px;">Look directly at the camera for identity verification</p>
+
+            <video id="selfieVideo" autoplay playsinline style="display:none;"></video>
+            <canvas id="selfieCanvas" style="display:none;"></canvas>
+            <img id="selfieCaptured" style="display:none;">
+
+            <div class="camera-controls">
+              <button class="btn btn-primary" id="startSelfieBtn" onclick="startSelfieCamera()">📷 Start Selfie
+                Camera</button>
+              <button class="btn btn-success" id="captureSelfieBtn" onclick="captureSelfie()" style="display:none;">📸
+                Capture</button>
+              <button class="btn btn-secondary" id="retakeSelfieBtn" onclick="retakeSelfie()" style="display:none;">🔄
+                Retake</button>
+            </div>
+          </div>
+
+          <div class="btn-group" id="step3Buttons">
+            <button class="btn btn-secondary" onclick="prevStep(3)">← Back</button>
+            <button class="btn btn-primary" id="submitBtn" onclick="submitBooking()" disabled>Complete Booking</button>
+          </div>
+        </div>
+
+        <!-- Success Step -->
+        <div class="form-step" id="stepSuccess">
+          <div class="success-message">
+            <div class="success-icon">
+              <svg viewBox="0 0 24 24">
+                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+              </svg>
+            </div>
+            <h2>Booking Confirmed!</h2>
+            <p>Your booking request has been submitted successfully. Our team will contact you shortly.</p>
+
+            <div class="booking-summary" id="bookingSummary"></div>
+
+            <a href="https://wa.me/966506209555" class="btn btn-success"
+              style="text-decoration:none; display:inline-block;">
+              💬 Chat on WhatsApp
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-wrapper">
+      <div class="footer-content-wrapper">
+        <div class="footer-left-colum"><img src="images/more-logo.png" loading="lazy" alt="More Rent A Car"
+            class="image-8" /></div>
+        <div class="footer-center-colum">
+          <a href="index.html" class="footer-center-link">Home</a>
+          <a href="about-us.html" class="footer-center-link">About Us</a>
+          <a href="cars.html" class="footer-center-link">Cars</a>
+          <a href="contact.html" class="footer-center-link">Contact</a>
+        </div>
+        <div class="footer-right-colum">
+          <h3 class="heading-8">More Rent A Car</h3>
+          <p class="paragraph-2">Your trusted luxury car rental in Jeddah, Saudi Arabia.</p>
+          <p style="color: rgba(255,255,255,0.7); font-size: 14px;">📞 +966 50 620 9555<br>📧 info@morerentcar.com</p>
+        </div>
+      </div>
+      <div class="div-block-5">
+        <div class="text-block-18">2025 More Rent A Car</div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Car data (matching cars.html)
+    const carsData = [
+      { id: 'bmw-735', brand: 'BMW', model: '735 L', year: 2025, dailyPrice: 3000, image: 'images/bmw-735.webp' },
+      { id: 'bmw-520', brand: 'BMW', model: '520', year: 2026, dailyPrice: 1300, image: 'images/bmw-520.webp' },
+      { id: 'bmw-425', brand: 'BMW', model: '425 Convertible', year: 2025, dailyPrice: 3000, image: 'images/bmw-425.png' },
+      { id: 'bentley-continental', brand: 'Bentley', model: 'Continental GT', year: 2025, dailyPrice: 6500, image: 'images/bentley.webp' },
+      { id: 'rolls-ghost', brand: 'Rolls-Royce', model: 'Ghost', year: 2017, dailyPrice: 3500, image: 'images/rolls-ghost.png' },
+      { id: 'mercedes-g63', brand: 'Mercedes', model: 'Benz G63 AMG', year: 2022, dailyPrice: 4500, image: 'images/mercedes-g63.png' },
+      { id: 'lambo-urus', brand: 'Lamborghini', model: 'Urus', year: 2023, dailyPrice: 5700, image: 'images/lambo-urus.png' },
+      { id: 'porsche-911', brand: 'Porsche', model: '911 Carrera', year: 2023, dailyPrice: 4000, image: 'images/porsche-911.png' },
+      { id: 'porsche-boxster', brand: 'Porsche', model: '718 Boxster', year: 2024, dailyPrice: 2800, image: 'images/porsche-boxster.png' },
+      { id: 'gmc-yukon', brand: 'GMC', model: 'Yukon Denali', year: 2024, dailyPrice: 1500, image: 'images/gmc-yukon.png' },
+      { id: 'genesis-g80', brand: 'Genesis', model: 'G80', year: 2023, dailyPrice: 700, image: 'images/genesis-g80.png' }
+    ];
+
+    // State
+    let currentStep = 1;
+    let selectedCar = null;
+    let bookingData = {};
+    let ageVerified = false;
+    let licenseStream = null;
+    let selfieStream = null;
+    let extractedData = {};
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      populateCarSelect();
+      setMinDates();
+      checkUrlParams();
+    });
+
+    function populateCarSelect() {
+      const select = document.getElementById('carSelect');
+      carsData.forEach(car => {
+        const option = document.createElement('option');
+        option.value = car.id;
+        option.textContent = `${car.brand} ${car.model} (${car.year}) - ${car.dailyPrice.toLocaleString()} SAR/day`;
+        select.appendChild(option);
+      });
+    }
+
+    function setMinDates() {
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('pickupDate').min = today;
+      document.getElementById('returnDate').min = today;
+    }
+
+    function checkUrlParams() {
+      const params = new URLSearchParams(window.location.search);
+      const carId = params.get('car');
+      if (carId) {
+        document.getElementById('carSelect').value = carId;
+        updatePriceCalculator();
+      }
+    }
+
+    // Step Navigation
+    function nextStep(current) {
+      if (!validateStep(current)) return;
+      currentStep = current + 1;
+      updateSteps();
+    }
+
+    function prevStep(current) {
+      currentStep = current - 1;
+      updateSteps();
+    }
+
+    function updateSteps() {
+      document.querySelectorAll('.step').forEach((step, i) => {
+        step.classList.remove('active', 'completed');
+        if (i + 1 < currentStep) step.classList.add('completed');
+        if (i + 1 === currentStep) step.classList.add('active');
+      });
+
+      document.querySelectorAll('.form-step').forEach(step => step.classList.remove('active'));
+      const stepId = currentStep === 4 ? 'stepSuccess' : `step${currentStep}`;
+      document.getElementById(stepId).classList.add('active');
+    }
+
+    function validateStep(step) {
+      if (step === 1) {
+        const firstName = document.getElementById('firstName').value.trim();
+        const lastName = document.getElementById('lastName').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const phone = document.getElementById('phone').value.trim();
+        const nationality = document.getElementById('nationality').value;
+
+        if (!firstName || !lastName || !email || !phone || !nationality) {
+          alert('Please fill in all required fields.');
+          return false;
+        }
+
+        bookingData.firstName = firstName;
+        bookingData.lastName = lastName;
+        bookingData.email = email;
+        bookingData.phone = phone;
+        bookingData.nationality = nationality;
+      }
+
+      if (step === 2) {
+        const carId = document.getElementById('carSelect').value;
+        const pickupDate = document.getElementById('pickupDate').value;
+        const returnDate = document.getElementById('returnDate').value;
+
+        if (!carId || !pickupDate || !returnDate) {
+          alert('Please select a car and rental dates.');
+          return false;
+        }
+
+        if (new Date(returnDate) <= new Date(pickupDate)) {
+          alert('Return date must be after pickup date.');
+          return false;
+        }
+
+        selectedCar = carsData.find(c => c.id === carId);
+        bookingData.car = selectedCar;
+        bookingData.pickupDate = pickupDate;
+        bookingData.returnDate = returnDate;
+        bookingData.pickupLocation = document.getElementById('pickupLocation').value;
+      }
+
+      return true;
+    }
+
+    // Price Calculator
+    function updatePriceCalculator() {
+      const carId = document.getElementById('carSelect').value;
+      const pickupDate = document.getElementById('pickupDate').value;
+      const returnDate = document.getElementById('returnDate').value;
+      const pickupLocation = document.getElementById('pickupLocation').value;
+
+      if (!carId) {
+        document.getElementById('priceCalculator').style.display = 'none';
+        document.getElementById('selectedCarPreview').style.display = 'none';
+        return;
+      }
+
+      const car = carsData.find(c => c.id === carId);
+
+      document.getElementById('selectedCarPreview').style.display = 'block';
+      document.getElementById('selectedCarPreview').innerHTML = `
+                <div class="car-select-card selected">
+                    <img src="${car.image}" alt="${car.brand} ${car.model}">
+                    <div class="car-select-info">
+                        <h4>${car.brand} ${car.model}</h4>
+                        <div class="price">${car.dailyPrice.toLocaleString()} SAR/day</div>
+                    </div>
+                </div>
+            `;
+
+      if (pickupDate && returnDate) {
+        const start = new Date(pickupDate);
+        const end = new Date(returnDate);
+        const days = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
+
+        if (days > 0) {
+          const dailyRate = car.dailyPrice;
+          const subtotal = days * dailyRate;
+          let deliveryFee = 0;
+          if (pickupLocation === 'airport') deliveryFee = 100;
+          if (pickupLocation === 'hotel') deliveryFee = 150;
+          const total = subtotal + deliveryFee;
+
+          document.getElementById('dailyRateDisplay').textContent = `${dailyRate.toLocaleString()} SAR`;
+          document.getElementById('daysDisplay').textContent = `${days} day${days > 1 ? 's' : ''}`;
+          document.getElementById('subtotalDisplay').textContent = `${subtotal.toLocaleString()} SAR`;
+          document.getElementById('deliveryFeeDisplay').textContent = deliveryFee > 0 ? `${deliveryFee} SAR` : 'Free';
+          document.getElementById('totalDisplay').textContent = `${total.toLocaleString()} SAR`;
+
+          bookingData.days = days;
+          bookingData.subtotal = subtotal;
+          bookingData.deliveryFee = deliveryFee;
+          bookingData.total = total;
+
+          document.getElementById('priceCalculator').style.display = 'block';
+        }
+      }
+    }
+
+    // ===== LICENSE CAMERA CAPTURE =====
+    async function startLicenseCamera() {
+      try {
+        const video = document.getElementById('licenseVideo');
+        licenseStream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: 'environment', width: 1280, height: 720 }
+        });
+        video.srcObject = licenseStream;
+
+        document.getElementById('startLicenseCameraBtn').style.display = 'none';
+        document.getElementById('captureLicenseBtn').style.display = 'inline-block';
+        document.getElementById('licenseOverlay').style.display = 'flex';
+      } catch (error) {
+        console.error('Camera Error:', error);
+        alert('Could not access camera. Please allow camera permission.');
+      }
+    }
+
+    function captureLicense() {
+      const video = document.getElementById('licenseVideo');
+      const canvas = document.getElementById('licenseCanvas');
+      const captured = document.getElementById('licenseCaptured');
+
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      canvas.getContext('2d').drawImage(video, 0, 0);
+
+      const imageData = canvas.toDataURL('image/jpeg', 0.9);
+      captured.src = imageData;
+      captured.style.display = 'block';
+
+      // Hide video, show captured
+      document.getElementById('licenseContainer').style.display = 'none';
+      document.getElementById('captureLicenseBtn').style.display = 'none';
+      document.getElementById('retakeLicenseBtn').style.display = 'inline-block';
+
+      // Stop camera
+      if (licenseStream) {
+        licenseStream.getTracks().forEach(track => track.stop());
+      }
+
+      // Process with OCR
+      processLicenseOCR(imageData);
+    }
+
+    function retakeLicense() {
+      document.getElementById('licenseCaptured').style.display = 'none';
+      document.getElementById('licenseContainer').style.display = 'block';
+      document.getElementById('retakeLicenseBtn').style.display = 'none';
+      document.getElementById('ocrResults').style.display = 'none';
+      document.getElementById('selfieSection').style.display = 'none';
+      ageVerified = false;
+      updateSubmitButton();
+      startLicenseCamera();
+    }
+
+    // ===== OCR PROCESSING =====
+    async function processLicenseOCR(imageData) {
+      document.getElementById('ocrProcessing').style.display = 'block';
+      document.getElementById('ocrResults').style.display = 'none';
+
+      try {
+        const result = await Tesseract.recognize(imageData, 'eng+ara', {
+          logger: m => console.log(m)
+        });
+
+        const text = result.data.text;
+        console.log('OCR Result:', text);
+
+        // Extract information
+        extractedData = extractLicenseData(text);
+
+        // Display extracted data (READ-ONLY)
+        document.getElementById('displayName').textContent = extractedData.name || bookingData.firstName + ' ' + bookingData.lastName;
+        document.getElementById('displayDOB').textContent = extractedData.dobDisplay || 'Not detected';
+        document.getElementById('displayLicenseNum').textContent = extractedData.licenseNumber || 'Not detected';
+        document.getElementById('displayExpiry').textContent = extractedData.expiryDisplay || 'Not detected';
+
+        document.getElementById('ocrProcessing').style.display = 'none';
+        document.getElementById('ocrResults').style.display = 'block';
+        document.getElementById('selfieSection').style.display = 'block';
+
+        // Check age automatically
+        checkAge(extractedData.dob);
+      } catch (error) {
+        console.error('OCR Error:', error);
+        document.getElementById('ocrProcessing').style.display = 'none';
+
+        // Show results with detected user name
+        document.getElementById('displayName').textContent = bookingData.firstName + ' ' + bookingData.lastName;
+        document.getElementById('displayDOB').textContent = 'Manual verification required';
+        document.getElementById('displayLicenseNum').textContent = 'Pending';
+        document.getElementById('displayExpiry').textContent = 'Pending';
+
+        document.getElementById('ocrResults').style.display = 'block';
+        document.getElementById('selfieSection').style.display = 'block';
+
+        // For demo, allow proceed
+        ageVerified = true;
+        updateSubmitButton();
+      }
+    }
+
+    function extractLicenseData(text) {
+      const data = {};
+
+      // Extract name
+      const namePatterns = [/name[:\s]*([A-Za-z\s]+)/i, /holder[:\s]*([A-Za-z\s]+)/i];
+      for (const pattern of namePatterns) {
+        const match = text.match(pattern);
+        if (match) { data.name = match[1].trim(); break; }
+      }
+
+      // Extract dates
+      const dateMatches = text.match(/\d{2}[\/-]\d{2}[\/-]\d{4}|\d{4}[\/-]\d{2}[\/-]\d{2}/g);
+      if (dateMatches && dateMatches.length >= 1) {
+        data.dob = convertToDate(dateMatches[0]);
+        data.dobDisplay = formatDateDisplay(data.dob);
+        if (dateMatches.length >= 2) {
+          data.expiry = convertToDate(dateMatches[dateMatches.length - 1]);
+          data.expiryDisplay = formatDateDisplay(data.expiry);
+        }
+      }
+
+      // Extract license number
+      const licenseMatch = text.match(/[A-Z0-9]{6,15}/);
+      if (licenseMatch) { data.licenseNumber = licenseMatch[0]; }
+
+      return data;
+    }
+
+    function convertToDate(dateStr) {
+      if (dateStr.match(/^\d{2}[\/-]\d{2}[\/-]\d{4}$/)) {
+        const parts = dateStr.split(/[\/-]/);
+        return `${parts[2]}-${parts[1]}-${parts[0]}`;
+      }
+      return dateStr;
+    }
+
+    function formatDateDisplay(dateStr) {
+      if (!dateStr) return 'Not detected';
+      try {
+        return new Date(dateStr).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+      } catch { return dateStr; }
+    }
+
+    function checkAge(dob) {
+      const ageStatus = document.getElementById('ageStatus');
+
+      if (!dob) {
+        // For demo purposes, if no DOB detected, allow with warning
+        ageStatus.innerHTML = `
+                    <div class="age-status verified">
+                        <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                        <span>Age verification pending - manual check required</span>
+                    </div>
+                `;
+        ageVerified = true;
+        updateSubmitButton();
+        return;
+      }
+
+      const birthDate = new Date(dob);
+      const today = new Date();
+      let age = today.getFullYear() - birthDate.getFullYear();
+      const monthDiff = today.getMonth() - birthDate.getMonth();
+
+      if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+      }
+
+      if (age >= 23) {
+        ageStatus.innerHTML = `
+                    <div class="age-status verified">
+                        <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                        <span>✓ Age Verified: ${age} years old - Eligible to rent</span>
+                    </div>
+                `;
+        ageVerified = true;
+      } else {
+        ageStatus.innerHTML = `
+                    <div class="age-status rejected">
+                        <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+                        <span>✗ Sorry, you must be at least 23 years old to rent. Your age: ${age}</span>
+                    </div>
+                `;
+        ageVerified = false;
+      }
+
+      updateSubmitButton();
+    }
+
+    // ===== SELFIE CAMERA =====
+    async function startSelfieCamera() {
+      try {
+        const video = document.getElementById('selfieVideo');
+        selfieStream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: 'user', width: 480, height: 480 }
+        });
+        video.srcObject = selfieStream;
+        video.style.display = 'block';
+
+        document.getElementById('startSelfieBtn').style.display = 'none';
+        document.getElementById('captureSelfieBtn').style.display = 'inline-block';
+      } catch (error) {
+        console.error('Selfie Camera Error:', error);
+        alert('Could not access front camera.');
+      }
+    }
+
+    function captureSelfie() {
+      const video = document.getElementById('selfieVideo');
+      const canvas = document.getElementById('selfieCanvas');
+      const captured = document.getElementById('selfieCaptured');
+
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      canvas.getContext('2d').drawImage(video, 0, 0);
+
+      const imageData = canvas.toDataURL('image/jpeg');
+      captured.src = imageData;
+      captured.style.display = 'block';
+      video.style.display = 'none';
+
+      if (selfieStream) {
+        selfieStream.getTracks().forEach(track => track.stop());
+      }
+
+      document.getElementById('captureSelfieBtn').style.display = 'none';
+      document.getElementById('retakeSelfieBtn').style.display = 'inline-block';
+
+      bookingData.selfie = imageData;
+      updateSubmitButton();
+    }
+
+    function retakeSelfie() {
+      document.getElementById('selfieCaptured').style.display = 'none';
+      document.getElementById('retakeSelfieBtn').style.display = 'none';
+      startSelfieCamera();
+    }
+
+    function updateSubmitButton() {
+      const submitBtn = document.getElementById('submitBtn');
+      submitBtn.disabled = !ageVerified;
+    }
+
+    // ===== SUBMIT BOOKING =====
+    function submitBooking() {
+      if (!ageVerified) {
+        alert('Age verification required. You must be 23 or older.');
+        return;
+      }
+
+      bookingData.licenseName = document.getElementById('displayName').textContent;
+      bookingData.licenseDOB = document.getElementById('displayDOB').textContent;
+      bookingData.licenseNumber = document.getElementById('displayLicenseNum').textContent;
+      bookingData.licenseExpiry = document.getElementById('displayExpiry').textContent;
+
+      currentStep = 4;
+      updateSteps();
+
+      document.getElementById('bookingSummary').innerHTML = `
+                <h4>📋 Booking Details</h4>
+                <div class="booking-detail">
+                    <span>Customer</span>
+                    <strong>${bookingData.firstName} ${bookingData.lastName}</strong>
+                </div>
+                <div class="booking-detail">
+                    <span>Vehicle</span>
+                    <strong>${bookingData.car.brand} ${bookingData.car.model}</strong>
+                </div>
+                <div class="booking-detail">
+                    <span>Pickup Date</span>
+                    <strong>${new Date(bookingData.pickupDate).toLocaleDateString()}</strong>
+                </div>
+                <div class="booking-detail">
+                    <span>Return Date</span>
+                    <strong>${new Date(bookingData.returnDate).toLocaleDateString()}</strong>
+                </div>
+                <div class="booking-detail">
+                    <span>Duration</span>
+                    <strong>${bookingData.days} day${bookingData.days > 1 ? 's' : ''}</strong>
+                </div>
+                <div class="booking-detail">
+                    <span>Total Amount</span>
+                    <strong style="color:#d4af37; font-size:20px;">${bookingData.total.toLocaleString()} SAR</strong>
+                </div>
+            `;
+
+      console.log('Booking submitted:', bookingData);
+    }
+  </script>
+</body>
+
+</html>

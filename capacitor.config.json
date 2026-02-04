@@ -1,0 +1,19 @@
+{
+    "$schema": "https://capacitorjs.com/docs/config",
+    "appId": "com.morerentcar.app",
+    "appName": "More Rent A Car",
+    "webDir": "www",
+    "server": {
+        "androidScheme": "https"
+    },
+    "plugins": {
+        "Camera": {
+            "permissionText": "We need camera access to capture your driving license and selfie for verification."
+        }
+    },
+    "ios": {
+        "contentInset": "automatic",
+        "backgroundColor": "#1a1a1a",
+        "preferredContentMode": "mobile"
+    }
+}
