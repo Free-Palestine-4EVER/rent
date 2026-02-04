@@ -294,6 +294,15 @@
       background: #000;
     }
 
+    .payment-option:hover {
+      border-color: #d4af37 !important;
+      background-color: #fff9e6;
+    }
+
+    .payment-option input:checked+div {
+      color: #d4af37;
+    }
+
     #licenseVideo {
       width: 100%;
       max-height: 350px;
@@ -894,6 +903,71 @@
             <p>Your booking request has been submitted successfully. Our team will contact you shortly.</p>
 
             <div class="booking-summary" id="bookingSummary"></div>
+
+            <div class="payment-selection" style="margin: 30px 0; text-align: left;">
+              <h3 style="font-size: 18px; margin-bottom: 15px; color: #333;">Select Payment Method</h3>
+              <div class="payment-options" style="display: grid; gap: 10px;">
+
+                <!-- Cash / POS -->
+                <label class="payment-option"
+                  style="display: flex; align-items: center; padding: 15px; border: 2px solid #eee; border-radius: 12px; cursor: pointer; transition: all 0.2s;">
+                  <input type="radio" name="payment" value="cash" style="margin-right: 15px; accent-color: #d4af37;"
+                    checked>
+                  <div style="flex: 1;">
+                    <div style="font-weight: 600; color: #333;">Cash / POS on Delivery</div>
+                    <div style="font-size: 12px; color: #666;">Pay when you receive the car</div>
+                  </div>
+                  <svg viewBox="0 0 24 24" style="width: 24px; height: 24px; fill: #28a745;">
+                    <path
+                      d="M12.5 6.9c1.7 0 3.4.6 4.6 1.8l.1.1c1.3 1.3 1.9 3 1.7 4.7.7-.3 1.2-1 1.2-1.9 0-1.2-1-2.1-2.2-2.1H5.1c-1.2 0-2.2.9-2.2 2.1 0 .9.5 1.6 1.2 1.9-.3-1.7.3-3.4 1.7-4.7L5.9 8.7c1.2-1.2 2.9-1.8 4.6-1.8h2zM5.1 20.5h12.8c1.2 0 2.2-.9 2.2-2.1 0-1.2-1-2.1-2.2-2.1H5.1c-1.2 0-2.2.9-2.2 2.1 0 1.2 1 2.1 2.2 2.1zM19 13.3c.7-.3 1.2-1 1.2-1.9 0-1.2-1-2.1-2.2-2.1H5.1c-1.2 0-2.2.9-2.2 2.1 0 .9.5 1.6 1.2 1.9.3 1.2 1 2.1 2.2 2.1h12.8c1.2 0 1.9-.9 1.9-2.1z" />
+                  </svg>
+                </label>
+
+                <!-- Apple Pay -->
+                <label class="payment-option"
+                  style="display: flex; align-items: center; padding: 15px; border: 2px solid #eee; border-radius: 12px; cursor: pointer; transition: all 0.2s;">
+                  <input type="radio" name="payment" value="apple" style="margin-right: 15px; accent-color: #d4af37;">
+                  <div style="flex: 1; display: flex; align-items: center;">
+                    <div style="font-weight: 600; color: #333;">Apple Pay</div>
+                  </div>
+                  <svg viewBox="0 0 24 24" style="width: 28px; height: 28px; fill: #000;">
+                    <path
+                      d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.79-1.31.02-2.3-1.23-3.14-2.47-1.73-2.5-3.04-7.06-1.27-10.13 0.88-1.52 2.45-2.48 4.15-2.5 1.34-0.01 2.6.9 3.42.9 0.82 0 2.37-1.12 3.99-0.95 2.11 0.17 3.71 0.85 4.69 2.28-4.21 2.05-3.5 8.35 0.54 10.4zm-4.32-15.68c0.7-0.85 1.18-2.03 1.05-3.21-1.02 0.04-2.24 0.68-2.97 1.52-0.65 0.74-1.22 1.92-1.07 3.03 1.13 0.09 2.29-0.5 2.99-1.34z" />
+                  </svg>
+                </label>
+
+                <!-- Google Pay -->
+                <label class="payment-option"
+                  style="display: flex; align-items: center; padding: 15px; border: 2px solid #eee; border-radius: 12px; cursor: pointer; transition: all 0.2s;">
+                  <input type="radio" name="payment" value="google" style="margin-right: 15px; accent-color: #d4af37;">
+                  <div style="flex: 1; display: flex; align-items: center;">
+                    <div style="font-weight: 600; color: #333;">Google Pay</div>
+                  </div>
+                  <svg viewBox="0 0 24 24" style="width: 24px; height: 24px; fill: #EA4335;">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-9l6 4.5-6 4.5z"
+                      opacity="0" />
+                    <path
+                      d="M12.5 10v2.2h3c-.3 1.7-2.6 3.1-4.8 2.6-1.5-.3-2.6-1.5-2.9-3-.5-2.6 1.7-4.8 4.3-4.4 1 .1 1.9.6 2.5 1.3l1.8-1.7c-1.3-1.2-3-1.9-4.7-1.8-3.3.1-6 2.9-5.9 6.2.1 3.2 2.9 5.8 6.1 5.7 6.4-.3 7.3-8.8 3.5-10.7l-2.9 3.6z" />
+                  </svg>
+                </label>
+
+                <!-- Credit Card -->
+                <label class="payment-option"
+                  style="display: flex; align-items: center; padding: 15px; border: 2px solid #eee; border-radius: 12px; cursor: pointer; transition: all 0.2s;">
+                  <input type="radio" name="payment" value="card" style="margin-right: 15px; accent-color: #d4af37;">
+                  <div style="flex: 1;">
+                    <div style="font-weight: 600; color: #333;">Credit / Debit Card</div>
+                    <div style="font-size: 12px; color: #666;">Visa / Mastercard / Mada</div>
+                  </div>
+                  <div style="display: flex; gap: 5px;">
+                    <svg viewBox="0 0 24 24" style="width: 24px; height: 24px; fill: #1a1f71;">
+                      <path
+                        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-5-5h10v2H7z" />
+                    </svg>
+                  </div>
+                </label>
+              </div>
+            </div>
 
             <a href="https://wa.me/966506209555" class="btn btn-success"
               style="text-decoration:none; display:inline-block;">
