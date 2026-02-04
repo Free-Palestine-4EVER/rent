@@ -1281,8 +1281,8 @@
         document.getElementById('ocrResults').style.display = 'block';
         document.getElementById('selfieSection').style.display = 'block';
 
-        // For demo, allow proceed
-        ageVerified = true;
+        // OCR Error - Fail safely
+        ageVerified = false;
         updateSubmitButton();
       }
     }
@@ -1334,14 +1334,14 @@
       const ageStatus = document.getElementById('ageStatus');
 
       if (!dob) {
-        // For demo purposes, if no DOB detected, allow with warning
+        // Strict Mode: Require manual check or reject if no DOB found
         ageStatus.innerHTML = `
-                    <div class="age-status verified">
-                        <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-                        <span>Age verification pending - manual check required</span>
+                    <div class="age-status rejected">
+                        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                        <span>Could not detect Date of Birth. Please upload a clearer photo or retake.</span>
                     </div>
                 `;
-        ageVerified = true;
+        ageVerified = false;
         updateSubmitButton();
         return;
       }
